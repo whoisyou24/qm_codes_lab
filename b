@@ -8,7 +8,7 @@ Fori = 1, i ≤ nmax, i++, c = (a + b)  2;
 Print"Root after iteration ", i, " is c = ", N[c, 6], " f(c) = ", N[f[c], 6], "\n";
 If[f[a] * f[c] < 0, b = c, a = c];
 
-
+#table
 f[x_] := x^3 - 5 x + 1;
 a = 0;
 b = 1;
@@ -24,7 +24,7 @@ For[i = 1, i <= nmax, i++ ,  c = (a + b)/2;
 ]
 
 
-
+#secant
 f[x_] := x^3 - 5 x + 1;
 
 x0 = 2;
@@ -41,7 +41,7 @@ For[i = 1, i <= nmax, i++,
 ]
 
 
-
+#newton Raphson
 f[x_] := x^3 + 2 x^2 - 3 x - 1;
 
 a = 1;
@@ -57,7 +57,7 @@ For[i = 1, i <= nmax, i++,
 
 
 
-
+#Table
 f[x_] := x^3 - 5 x + 1;
 x0=0
 x1 = 1;     (* initial guess *)
@@ -72,7 +72,7 @@ For[i = 1, i <= nmax, i++,
 
 
 
-
+#gauss Seidel
 x = 0;
 y = 0;
 z = 0;
@@ -93,7 +93,7 @@ For[i = 1, i <= nmax, i++,
 
 
 
-
+#Gauss jacobi matrix
 A = {{8, 3, 4},
      {-2, 5, -2},
      {1, 1, 3}};
@@ -131,7 +131,7 @@ jacobi[0, 0, 0, nmax]
 
 
 
-
+#lagrange,interpolation
 X = {0, 1, 3};
 Y = {1, 3, 55};
 n = 3;
@@ -166,7 +166,7 @@ a = Sum[Y[[k]] * L[n, k, x], {k, 1, n}];
 Print[a];
 Simplify[a]
 
-
+#newton,interpolation
 X = {0, 1, 3};
 Y = {1, 3, 55};
 n = 2;
@@ -193,6 +193,181 @@ Simplify[a]
 
 
 
+#integeration
+f[x_] := x + 1;
+lowerlimit = a = 0;
+upperlimit = b = 1;
+
+fa = f[a];
+fb = f[b];
+
+h = b - a;
+
+c = h * (fa + fb)/2;
+
+Print["Integral = ", c]
 
 
 
+
+
+
+
+#trapezoidal
+
+f[x_] := x^2 - x - 1;
+lowerlimit = a = 3;
+upperlimit = b = 5;
+fa = f[a];
+fb = f[b];
+h = b - a;
+(* Trapezoidal rule *)
+c = h * (fa + fb)/2;
+Print["The area approximate by the trapezoidal rule is ", c];
+
+(* Exact integral *)
+int = Integrate[f[x], {x, a, b}];
+
+Print[ "Original value of the integral is ", N[int], " and the error is ", N[c] - N[int]];
+
+
+
+#composite
+f[x_] := x + 1;
+lowerlimit = a = 0;
+upperlimit = b = 1;
+n = 10;
+fa = f[a];
+fb = f[b];
+h = (b - a)/n;
+sum = 0;
+
+For[i = 1, i < n, i++,sum = sum + N[f[a + i*h]]];
+
+sum = (h/2) * (fa + 2*sum + fb);
+
+Print["Integral = ", sum];
+
+
+
+
+
+
+
+f[x_] := x + 1;
+
+lowerlimit = a = 0;
+upperlimit = b = 1;
+fa = f[a];
+fb = f[b];
+h = (b - a)/2;
+
+c = (h/3) * (fa + 4*f[a + h] + fb);
+
+Print["Integral = ", N[c]];
+
+
+
+#SIMPSON!1/3
+f[x_] := x^2 + 2 x + 7;
+lowerlimit = a = 1;
+upperlimit = b = 2;
+fa = f[a];
+fb = f[b];
+h = (b - a)/2;
+c = (h/3) * (fa + 4*f[a + h] + fb);
+Print["The area approximate by the Simpson's rule is ", N[c]];
+
+(* Exact Integral *)
+int = Integrate[f[x], {x, a, b}];
+
+Print["Original value of the integral is ", N[int]," and the error is ", N[c] - N[int]];
+
+(* Trapezoidal Rule *)
+byTrap = N[(b - a)/2 * (fa + fb)];
+
+Print["The area approximate by the trapezoidal rule is ", N[byTrap]];
+
+
+
+
+
+
+
+
+
+
+
+#3/8
+f[x_] := Sin[x]/(x^2 + 1);
+
+lowlimit = a = 1;
+upplimit = b = 3;
+
+fa = f[a];
+fb = f[b];
+
+h = (b - a)/3;
+
+(* Simpson's 3/8 Rule *)
+c = (3*h/8) * (fa + 3*f[a + h] + 3*f[a + 2*h] + fb);
+
+Print["The area approximated by Simpson's rule is ", N[c]];
+
+
+
+
+#composite1/3
+f[x_] := Exp[x];
+lowlimit = a = 0;
+upplimit = b = 4;
+n = 20;
+fa = f[a];
+fb = f[b];
+h = (b - a)/n;
+sumodd = 0;
+sumeven = 0;
+(* odd terms *)
+For[i = 1, i < n, i += 2, sumodd = sumodd + N[f[a + i*h]]];
+
+(* even terms *)
+For[i = 2, i < n, i += 2,sumeven = sumeven + N[f[a + i*h]]];
+
+(* Simpson 1/3 composite formula *)
+sum = (h/3) * (fa + 4*sumodd + 2*sumeven + fb);
+
+Print["Integral = ", sum];
+
+(* exact integral *)
+exact = N[Integrate[f[x], {x, a, b}]];
+Print["Exact value of integral is ", exact];
+
+(* error *)
+error = N[sum] - N[exact];
+
+Print["The error between exact and numerical value is: ", error];
+
+
+
+
+
+
+#euler
+f[x_, y_] := 1 + (y/x);
+
+a = 1;
+b = 6;
+n = 10;
+h = (b - a)/n;
+y[1] = 1;
+temp = y[1];
+
+For[i = 0, i <= n - 1, i++,
+  x[i] = a + i*h;
+  y[i] = temp; 
+  y[i + 1] = y[i] + h*f[x[i], y[i]];
+  
+  Print["The ", i + 1, " approximation is ", N[y[i + 1]]];
+  
+  temp = y[i + 1];
+];
